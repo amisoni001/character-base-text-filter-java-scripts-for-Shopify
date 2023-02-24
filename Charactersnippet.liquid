@@ -1,0 +1,206 @@
+<div id="shopify-section-page-faq-template" class="shopify-section faq-section">
+<div class="section-main-banner">
+ <img src="{{ section.settings.image | img_url: 'master'  }}" class="banner-img-wrapper">
+<div class="faq-container">
+ 
+  <div class="faq-feature-details wrapper"> 
+    <div class="grid" style="padding-right: 0; padding-left: 0;">
+    <div class="grid-item one-whole large--three-quarters push--large--one-eighth text-center">
+      <h1 class="main-heading" style="text-transform: none;">
+        Hello, how can we help?</h1> 
+      <form class="guide-search"> 
+        <input id="filter-text" type="text" placeholder="How can we help you today?" autocomplete="off" maxlength="30">
+        <button id="filter-text-reset" type="reset">×</button> 
+        <button class="guide-search-icon">
+          <svg width="20" height="20" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M24.5 24.5L17.5 17.5L24.5 24.5ZM19.8333 11.6667C19.8333 12.7391 19.6221 13.8011 19.2117 14.7919C18.8013 15.7827 18.1997 16.683 17.4414 17.4414C16.683 18.1997 15.7827 18.8013 14.7919 19.2117C13.8011 19.6221 12.7391 19.8333 11.6667 19.8333C10.5942 19.8333 9.53224 19.6221 8.54142 19.2117C7.55059 18.8013 6.65031 18.1997 5.89196 17.4414C5.13362 16.683 4.53206 15.7827 4.12165 14.7919C3.71124 13.8011 3.5 12.7391 3.5 11.6667C3.5 9.50073 4.36041 7.42351 5.89196 5.89196C7.42351 4.36041 9.50073 3.5 11.6667 3.5C13.8326 3.5 15.9098 4.36041 17.4414 5.89196C18.9729 7.42351 19.8333 9.50073 19.8333 11.6667Z" stroke="#bbb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </button>
+      </form> 
+      <div class="guide-search">
+        <p class="faq-search-text">
+         Try searching for Impression Taking, Shipping, Tracking, Support....
+        </p>
+      </div>
+    </div>
+    </div>
+  </div>
+</div>
+</div> 
+  <div class="wrapper container main content">
+    <div class="grid" style="padding-right: 0; padding-left: 0;">
+    <div class="sidebar grid-item  one-whole toggle-all--false">
+      <div class="sidebar-wrap"> 
+        <div class="sidebar-block" style="margin-top: 20px;"> 
+          <h4 class="switch">{{ section.settings.title }}<span class="right icon-down-arrow"></span></h4>
+          <ul class="question_list help"> 
+            {% for block in section.blocks %}
+            <li>
+              <a href="" data-heading="{{ block.settings.heading | handleize }}" title="{{ block.settings.heading }}" class="{% if forloop.first %}active{% endif %}">
+              <span><img src="{{ block.settings.icon | img_url: 'master' }}"></span>{{ block.settings.heading }}</a>
+            </li> 
+             {%- endfor -%} 
+          </ul>
+        </div>
+      </div>
+      
+      <hr class="break help">
+        </div>
+      <div class="faq-articles-wrapper grid-item  one-whole">
+        <p class="no-data hidden"></p> 
+        <dl class="faq_accordion faq-page-data"> 
+        {% for block in section.blocks %}
+         {%- assign block_sttg = block.settings -%}
+          {%- capture faq_data -%}
+            {%- for i in (1..25) -%}
+            {%- assign question = 'quest_' | append:i -%}
+            {%- assign answer = 'ans_' | append:i -%}
+            {%- assign question_id = block_sttg[question] -%}
+            {%- assign answer_id = block_sttg[answer] -%}
+              {% if question_id != blank %}
+
+                <dt>
+                <button type="button" aria-controls="faq-panel-01" aria-expanded="false">
+                  <div class="{{ block.settings.heading | handleize }}">
+                  {{ question_id }}
+                  </div>
+                </button>
+                </dt>
+                <dd id="faq-panel-01" aria-hidden="true"> 
+                 {{ answer_id }}
+                </dd> 
+
+              {% endif %}
+ 
+            {%- endfor -%}
+            {%- endcapture -%}
+              <h2 class="title faq--heading faq-tab-heading">
+                <div class="relative">
+                <div id="{{ block.settings.heading | handleize }}" class="faq-locate-pos"> </div>
+                {{ block.settings.heading }}
+                </div>
+              </h2>
+              {{ faq_data }}
+        {% endfor %}
+        </dl>
+      </div>
+    </div>
+  
+              
+</div>
+<script>
+$(document).ready(function() {
+    $("#filter-text").val("");
+    var t = location.href.split("faq/");
+    $('.question_list.help a[data-heading="' + t + '"]').addClass("active"),typeof t[1] == "undefined" ? t[1] = "most-popular" : setTimeout(function() {
+        $("html, body").animate({
+            scrollTop: $(".container.main.content").offset().top
+        }, 1e3)
+    }, 400);
+    var e = $('.question_list.help a[data-heading="' + t[1] + '"]'),
+        a = e.attr("title");
+
+    $(".question_list.help a").removeClass("active"),e.addClass("active"), 
+    $(".faq_accordion.faq-page-data dt, .faq_accordion.faq-page-data dd, .faq_accordion.faq-page-data h2").hide(),
+      $(".faq_accordion.faq-page-data h2:contains(" + a + ")").show(),$(".faq_accordion.faq-page-data h2:contains(" + a + ")").nextUntil("h2", "dt").show(),showMostCommon(a), $(".guide-search").submit(function() {
+        return $("#filter-text").blur(), $("html, body").animate({
+            scrollTop: $(".container.main.content").offset().top
+        }, 1e3), !1
+    })
+}), $("#filter-text-reset").click(function() {
+    clear_filter(), $('.question_list.help a[title="Most Popular"]').addClass("active")
+}), $("#filter-text").keyup(function() {
+    reset_list_items();
+    var t = $("#filter-text").val();
+    if ($(".no-data").hide(),
+        $(".guide-search-icon").hide(), t.length == 0) clear_filter(),
+      $('.question_list.help a[title="Most Popular"]').addClass("active");
+    else {
+        $(".question_list.help a").removeClass("active"),
+          $(".faq_accordion.faq-page-data dt, .faq_accordion.faq-page-data dd, .faq_accordion.faq-page-data h2").hide();
+        var e = t.split(/[^A-Za-z]/).filter(Boolean); 
+        $(".faq_accordion.faq-page-data dt").each(function() {
+            var l = $(this).text() + $(this).next("dd").text(),
+                n = 0;
+            for (i = 0; i < e.length; i++)
+              l.toUpperCase().indexOf(e[i].toUpperCase()) != -1 && n++, n === e.length && ($(this).prevAll("h2:first").show(), $(this).show())
+        });
+        var a = $(".faq_accordion.faq-page-data dt:visible").length;
+        if (a == 1) var o = "article";
+        else var o = "articles";
+        if (e.length == 1) var s = "keyword";
+        else var s = "keywords";
+        $(".faq-search-text").html("Here are the <strong>" + a + "</strong> " + " results from your search " + ".");
+        var r = "We did not find any results from your search" + "." + " " + "Please try another phrase";
+        a == 0 && (e.length == 1 && (r += "."), e.length > 1 && (r += "fewer keywords."), $(".no-data").html(r), $(".no-data").show(), showMostCommon("Most Popular"))
+    }
+});
+
+function clear_filter() {
+    $("#filter-text").val(""), $(".no-data").hide(), $(".guide-search-icon").show(), $(".faq_accordion.faq-page-data dt, .faq_accordion.faq-page-data h2").hide(), $(".faq_accordion.faq-page-data dd").hide(), showMostCommon("Most Popular"), $(".faq-search-text").text("Try searching for Impression Taking, Shipping, Tracking, Support....")
+}
+
+function reset_list_items() {
+    $(".switch").hasClass("active") && ($(".question_list.help").hide(400), $(".switch").removeClass("active"))
+}
+
+function showMostCommon(t) {
+    t == "Most Popular" && ($(".faq_accordion.faq-page-data h2:contains(" + t + ")").show(), $(".most-popular").parents("dt").show())
+}
+$(".question_list.help a").click(function() {
+    $(".question_list.help a").removeClass("active"), reset_list_items(), clear_filter(), $(this).addClass("active");
+    var t = $(this).attr("title");
+    return $(".faq_accordion.faq-page-data dt, .faq_accordion.faq-page-data dd, .faq_accordion.faq-page-data h2").hide(), $(".faq_accordion.faq-page-data h2:contains(" + t + ")").show(), $(".faq_accordion.faq-page-data h2:contains(" + t + ")").nextUntil("h2", "dt").show(), 
+      showMostCommon(t), setTimeout(function() {
+        $("html, body").animate({
+            scrollTop: $(".faq-articles-wrapper").offset().top
+        }, 500)
+    }, 100), !1
+});
+
+//   $('h4.switch').click(function(e) {
+//   	e.preventDefault();
+  
+//     let $this = $(this);
+  
+//     if ($this.next().hasClass('shown')) {
+//         $this.next().removeClass('shown');
+//         $this.next().slideUp(350);
+//     } else {
+//         $this.next().toggleClass('shown');
+//         $this.next().slideToggle(350);
+//     }
+// });
+
+// <!-- $(function($) {
+//   var myFunc = function () {
+//   var w = document.body.clientWidth;
+//      if(w<= 768) {
+//         $('ul.question_list li a').click(function(e) {
+//         e.preventDefault();
+//         let $this = $(this);
+//         $this.parents('ul.question_list').slideUp(350);
+//         $this.parents('ul.question_list').removeClass('shown');
+//         });
+//       }
+//     else {
+//       // $('#background').css('height', 'auto');
+//     }
+//   }
+//    myFunc();
+//   jQuery(window).bind('resize orientationchange', myFunc);
+//   });
+//  -->
+  globalAccordions={init:function(){
+    var i=0,a=$(".faq_accordion > dt > button, .accordion > dt > a");
+    $(".faq_accordion > dd, .accordion > dd").attr("aria-hidden",!0),a.attr("aria-expanded",!1),
+      a.on("click activate",function(){
+        if(i)return!1;i=1;
+        var t=$(this).attr("aria-expanded")==="false";
+        return $(this).attr("aria-expanded",t),
+          $(this).parent().next().slideToggle(function(){i=0}),
+          $(this).parent().next().attr("aria-hidden",!t),!1}),
+      a.on("keydown",function(t){
+        var n=t.keyCode||e.which;n===13&&$(this).trigger("activate")})}};
+  globalAccordions.init();
+</script>
